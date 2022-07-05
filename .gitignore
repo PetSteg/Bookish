@@ -3,3 +3,4 @@ Bookish.ConsoleApp/bin
 Bookish.ConsoleApp/obj
 Bookish.DataAccess/bin
 Bookish.DataAccess/obj
+*.json
