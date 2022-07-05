@@ -8,4 +8,13 @@
         <RootNamespace>Bookish</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0-preview3.22168.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.5.22301.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bookish.DataAccess\Bookish.DataAccess.csproj" />
+    </ItemGroup>
+
 </Project>
