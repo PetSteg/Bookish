@@ -1,6 +1,4 @@
-﻿using System.Data;
-using Bookish.DataAccess;
-using Dapper;
+﻿using Bookish.DataAccess;
 
 namespace Bookish;
 
@@ -8,6 +6,17 @@ static class Program
 {
     public static async Task Main(string[] args)
     {
-        Console.WriteLine("start");
+        var db = new Database();
+        Console.WriteLine("Books:");
+        var books = await db.GetAllBooks();
+        foreach (var book in books)
+        {
+            Console.WriteLine(book.Title);
+            var authors = await db.GetAuthorsOfBook(book.ISBN);
+            foreach (var author in authors)
+            {
+                Console.WriteLine(author.Name);
+            }
+        }
     }
 }

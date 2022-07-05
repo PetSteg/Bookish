@@ -2,11 +2,11 @@ namespace Bookish.DataAccess.Models;
 
 public class Book
 {
-    private string ISBN { get; set; }
-    private string Title { get; set; }
-    private string Category { get; set; }
-    private DateOnly Publish_date { get; set; }
-    private string Subtitle { get; set; }
-    private string Cover_photo_url { get; set; }
-    private int Available_copies { get; set; }
+    public string ISBN { get; set; }
+    public string Title { get; set; }
+    public string Category { get; set; }
+    public DateTime Publish_date { get; set; }
+    public string Subtitle { get; set; }
+    public string Cover_photo_url { get; set; }
+    public int Available_copies { get; set; }
 }
