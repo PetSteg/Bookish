@@ -18,5 +18,14 @@ static class Program
                 Console.WriteLine(author.Name);
             }
         }
+        
+        db.InsertBorrow();
+
+        var borrows = await db.GetAllBorrows();
+        foreach (var borrow in borrows)
+        {
+            Console.WriteLine(borrow.Id_user + " " + borrow.DueDate);
+        }
+        
     }
 }

@@ -1,6 +1,7 @@
 using System.Data;
 using Bookish.DataAccess.Models;
 using Dapper;
+using Microsoft.VisualBasic;
 
 namespace Bookish.DataAccess;
 
@@ -31,6 +32,22 @@ public class Database
     {
         var sqlQuery = "SELECT * FROM Book ORDER BY [Title]";
         var books = await db.QueryAsync<Book>(sqlQuery, null, commandType: CommandType.Text);
+
+        return books.ToList();
+    }
+
+    public async void InsertBorrow()
+    {
+        var date = DateTime.Now.ToString();
+        Console.WriteLine(date);
+        var sqlQuery = $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, DueDate) Values ('9780747532743', 201, '{date}')";
+        db.Execute(sqlQuery);
+    }
+
+    public async Task<List<Borrow>> GetAllBorrows()
+    {
+        var sqlQuery = "SELECT * FROM Borrow";
+        var books = await db.QueryAsync<Borrow>(sqlQuery, null, commandType: CommandType.Text);
 
         return books.ToList();
     }

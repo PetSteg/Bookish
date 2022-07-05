@@ -11,9 +11,11 @@ public class Startup
     public IDbConnection ConfigureServices()
     {
         var appSettings = new ConfigurationBuilder().AddJsonFile(AppSettingsLocation).Build();
-
         var connectionString = appSettings.GetSection("ConnectionStrings")["SqlConnection"];
+        
         IDbConnection db = new SqlConnection(connectionString);
+        db.Open();
+
         return db;
     }
 }
