@@ -1,0 +1,44 @@
+@model Bookish.Web.Models.HomeModel
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Portfolio Item Row -->
+    <div class="row">
+
+        <div class="col-md-8 img-holder img500">
+            <img class="img-fluid" src="https://i.imgur.com/DbyiI1B.png" alt="">
+        </div>
+
+        <div class="col-md-4">
+            <h3 class="my-3">Hi, @Model.Name</h3>
+            <p>Welcome back to Bookish! Here are your borrowed books.</p>
+            <h3 class="my-3">Your books are due</h3>
+            @foreach (var book in Model.Books)
+            {
+                <p>@book.Book.Title - @book.DueDate</p>
+            }
+        </div>
+
+
+    </div>
+    <!-- /.row -->
+
+    <!-- Related Projects Row -->
+    <h3 class="my-4">Books</h3>
+
+    <div class="row">
+        @foreach (var book in Model.Books)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                    <a href="#">
+                        <img class="img-fluid img200" src=@book.Book.Cover_photo_url alt="">
+                    </a>
+                <p>@book.Book.Title</p>
+            </div>
+        }
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->

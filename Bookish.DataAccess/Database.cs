@@ -16,7 +16,7 @@ public class Database
         db = new Startup().ConfigureServices();
     }
 
-    public async Task<List<Author>> GetAuthorsOfBook(string ISBN)
+    public List<Author> GetAuthorsOfBook(string ISBN)
     {
         if (ISBN.Length != 13)
         {
@@ -24,16 +24,24 @@ public class Database
         }
 
         var sqlQuery =
-            $"SELECT * FROM Author INNER JOIN Contributions ON Author.Id_author = Contributions.Id_author WHERE Contributions.Id_book = {ISBN}";
-        var authors = await db.QueryAsync<Author>(sqlQuery, null, commandType: CommandType.Text);
+            $"SELECT * FROM Bookish.dbo.Author INNER JOIN Bookish.dbo.Contributions ON Author.Id_author = Contributions.Id_author WHERE Contributions.Id_book = '{ISBN}'";
+        var authors = db.Query<Author>(sqlQuery, null, commandType: CommandType.Text);
 
         return authors.ToList();
     }
 
-    public async Task<List<Book>> GetAllBooks()
+    public string GetDueDateUserBook(int idUser, string ISBN)
     {
-        var sqlQuery = "SELECT * FROM Book ORDER BY [Title]";
-        var books = await db.QueryAsync<Book>(sqlQuery, null, commandType: CommandType.Text);
+        var sqlQuery = $"SELECT Due_date FROM Bookish.dbo.Borrow WHERE Id_book = '{ISBN}' AND Id_user = {idUser}";
+        var dueDate = db.Query<string>(sqlQuery, null, commandType: CommandType.Text).First();
+
+        return dueDate;
+    }
+
+    public List<Book> GetAllBooks()
+    {
+        var sqlQuery = "SELECT * FROM Bookish.dbo.Book ORDER BY [Title]";
+        var books = db.Query<Book>(sqlQuery, null, commandType: CommandType.Text);
 
         return books.ToList();
     }
@@ -120,13 +128,22 @@ public class Database
     public bool VerifyUser(string email, string password)
     {
         var sqlQuery = $"SELECT Password FROM Bookish.dbo.Users WHERE Email = '{email}'";
-        var users = db.Query<User>(sqlQuery).ToList();
-        if (users.Count < 0)
+        try
         {
+            var users = db.Query<User>(sqlQuery).ToList();
+
+            if (users.Count < 0)
+            {
+                return false;
+            }
+
+            return users[0].Password == Hash(password);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
             return false;
         }
-
-        return users[0].Password == Hash(password);
     }
 
     public bool BorrowBook(string ISBN, int id_user)
@@ -161,12 +178,28 @@ public class Database
         db.Execute(updateCopiesQuery);
     }
 
-    public async Task<List<Book>> GetBooksBorrowedByUser(int idUser)
+    public List<Book> GetBooksBorrowedByUser(int idUser)
     {
         var sqlQuery =
             $"SELECT * FROM Bookish.dbo.Book INNER JOIN Bookish.dbo.Borrow ON Bookish.dbo.Book.ISBN = Bookish.dbo.Borrow.Id_book WHERE Bookish.dbo.Borrow.Id_user = {idUser}";
-        var books = await db.QueryAsync<Book>(sqlQuery, null, commandType: CommandType.Text);
+        var books = db.Query<Book>(sqlQuery, null, commandType: CommandType.Text);
 
         return books.ToList();
+    }
+
+    public User GetUserByEmail(string email)
+    {
+        var sqlQuery = $"SELECT * FROM Bookish.dbo.Users WHERE Email = '{email}'";
+        var user = db.Query<User>(sqlQuery, null, commandType: CommandType.Text);
+
+        return user.First();
+    }
+
+    public User GetUserById(string id)
+    {
+        var sqlQuery = $"SELECT * FROM Bookish.dbo.Users WHERE Id_user = '{id}'";
+        var user = db.Query<User>(sqlQuery, null, commandType: CommandType.Text);
+
+        return user.First();
     }
 }
