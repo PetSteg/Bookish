@@ -24,7 +24,7 @@ static class Program
         var borrows = await db.GetAllBorrows();
         foreach (var borrow in borrows)
         {
-            Console.WriteLine(borrow.Id_user + " " + borrow.DueDate);
+            Console.WriteLine(borrow.Id_user + " " + borrow.Due_date);
         }
         
     }

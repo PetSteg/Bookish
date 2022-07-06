@@ -41,7 +41,8 @@ public class Database
     public async void InsertBorrow()
     {
         var date = DateTime.Now.ToString();
-        var sqlQuery = $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, DueDate) Values ('9780747532743', 201, '{date}')";
+        var sqlQuery =
+            $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, Due_date) Values ('9780747532743', 201, '{date}')";
         db.Execute(sqlQuery);
     }
 
@@ -55,13 +56,13 @@ public class Database
 
     public string Hash(string password)
     {
-        byte[] salt = new byte[128 / 8];
+        var salt = new byte[128 / 8];
         using (var rngCsp = new RNGCryptoServiceProvider())
         {
             rngCsp.GetNonZeroBytes(salt);
         }
 
-        string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+        var hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: password,
             salt: salt,
             prf: KeyDerivationPrf.HMACSHA256,
@@ -69,9 +70,10 @@ public class Database
             numBytesRequested: 256 / 8));
         return hashedPassword;
     }
+
     public async Task<List<Borrow>> GetAllBorrows()
     {
-        var sqlQuery = "SELECT * FROM Borrow";
+        var sqlQuery = "SELECT * FROM Bookish.dbo.Borrow";
         var books = await db.QueryAsync<Borrow>(sqlQuery, null, commandType: CommandType.Text);
 
         return books.ToList();
