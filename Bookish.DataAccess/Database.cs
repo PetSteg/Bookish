@@ -1,6 +1,8 @@
 using System.Data;
+using System.Security.Cryptography;
 using Bookish.DataAccess.Models;
 using Dapper;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.VisualBasic;
 
 namespace Bookish.DataAccess;
@@ -39,11 +41,34 @@ public class Database
     public async void InsertBorrow()
     {
         var date = DateTime.Now.ToString();
-        Console.WriteLine(date);
         var sqlQuery = $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, DueDate) Values ('9780747532743', 201, '{date}')";
         db.Execute(sqlQuery);
     }
 
+    public async void InsertUser(string name, string email, string password)
+    {
+        password = Hash(password);
+
+        var sqlQuery = $"INSERT INTO Bookish.dbo.User (Name, Email, Password) VALUES ('{name}','{email}','{password}')";
+        db.Execute(sqlQuery);
+    }
+
+    public string Hash(string password)
+    {
+        byte[] salt = new byte[128 / 8];
+        using (var rngCsp = new RNGCryptoServiceProvider())
+        {
+            rngCsp.GetNonZeroBytes(salt);
+        }
+
+        string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: password,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 100000,
+            numBytesRequested: 256 / 8));
+        return hashedPassword;
+    }
     public async Task<List<Borrow>> GetAllBorrows()
     {
         var sqlQuery = "SELECT * FROM Borrow";
