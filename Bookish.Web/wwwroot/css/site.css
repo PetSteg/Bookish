@@ -16,7 +16,7 @@ html {
 body {
   margin-bottom: 60px;
   background: #007bff;
-  background: linear-gradient(to right, #0062E6, #33AEFF);
+  background: linear-gradient(to left, #03D3FC, #33AEFF);
 }
 
 .card-img-left {
