@@ -55,4 +55,9 @@ public class Database
     {
         return bookQueries.GetAuthorsOfBook(ISBN);
     }
+
+    public void BorrowBook(string isbn, int userId)
+    {
+        bookQueries.BorrowBook(isbn, userId);
+    }
 }

@@ -14,4 +14,16 @@
       <ProjectReference Include="..\Bookish.DataAccess\Bookish.DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="Views\Home\Form.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Views\Home\Form.cshtml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Views\Home\Form.cshtml" />
+    </ItemGroup>
+
 </Project>

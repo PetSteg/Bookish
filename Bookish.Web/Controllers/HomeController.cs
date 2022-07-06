@@ -4,6 +4,8 @@ using Bookish.DataAccess.Models;
 using Bookish.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Bookish.Web.Models;
+using Microsoft.Extensions.Logging;
 
 namespace simpleForm.Controllers;
 
@@ -115,6 +117,16 @@ public class HomeController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+    
+    [HttpPost]
+    public IActionResult Borrowed(string ISBN)
+    {
+        
+        var userId = Request.Cookies["id"];
+        db.BorrowBook(ISBN, Int32.Parse(userId));
+        Response.Redirect("/Home/Library");
+        return View("Borrowed");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
