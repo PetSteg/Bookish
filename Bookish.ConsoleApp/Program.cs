@@ -7,6 +7,7 @@ static class Program
     public static async Task Main(string[] args)
     {
         var db = new Database();
+        Console.WriteLine(db.InsertUser("eu", "eu@eu.eu", "12345"));
         // Console.WriteLine("Books:");
         // var books = await db.GetAllBooks();
         // foreach (var book in books)
@@ -18,7 +19,7 @@ static class Program
         //         Console.WriteLine(author.Name);
         //     }
         // }
-        
+
         // foreach (var book in db.GetBooksBorrowedByUser(208))
         // {
         //     Console.WriteLine(book.Title);
@@ -30,7 +31,7 @@ static class Program
         //     }
         //     Console.WriteLine();
         // }
-        
+
         /*db.InsertBorrow();
 
         var borrows = await db.GetAllBorrows();
@@ -41,7 +42,7 @@ static class Program
         // db.InsertBook("123456789abi", "C# for dummies", "Programming", "05-07-2022", "Yes", 2, new List<string>(){"Stefan", "Peter"});
         /*var aux = db.GetAuthorId("Jon");
         Console.WriteLine(aux);*/
-        
+
         /*db.InsertUser("Stefan2","Stefan@ceva.com","1234");
 
         Console.WriteLine(db.VerifyUser("Stefan@ceva.com", "12345"));
