@@ -38,11 +38,11 @@ public class Database
         return books.ToList();
     }
 
-    public async void InsertBorrow()
+    public async void InsertBorrow(string ISBN, int id_user)
     {
-        var date = DateTime.Now.ToString();
+        var dueDate = DateTime.Now.AddDays(14).ToString("dd-MM-yyyy");
         var sqlQuery =
-            $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, Due_date) Values ('9780747532743', 201, '{date}')";
+            $"INSERT INTO Bookish.dbo.Borrow (Id_book, Id_user, Due_date) VALUES ('{ISBN}', {id_user}, '{dueDate}')";
         db.Execute(sqlQuery);
     }
 
@@ -50,17 +50,28 @@ public class Database
     {
         password = Hash(password);
 
-        var sqlQuery = $"INSERT INTO Bookish.dbo.User (Name, Email, Password) VALUES ('{name}','{email}','{password}')";
+        var sqlQuery = $"INSERT INTO Bookish.dbo.Users (Name, Email, Password) VALUES ('{name}', '{email}','{password}')";
         db.Execute(sqlQuery);
+    }
+    
+    public async void InsertBook(string ISBN, string Title, string Category, string Publish_date, string Subtitle, 
+        int Available_copies, List<string> authors)
+    {
+        var sqlQuery =
+            $"INSERT INTO Bookish.dbo.Book (ISBN, Title, Category, Publish_date, Subtitle, Available_copies) VALUES ('{ISBN}', '{Title}', " +
+            $"'{Category}','{Publish_date}', '{Subtitle}','{Available_copies}')";
+        db.Execute(sqlQuery);
+
+        foreach (var author in authors)
+        {
+            var authorId = GetAuthorId(author);
+            InsertContribution(ISBN, authorId);
+        }
     }
 
     public string Hash(string password)
     {
-        var salt = new byte[128 / 8];
-        using (var rngCsp = new RNGCryptoServiceProvider())
-        {
-            rngCsp.GetNonZeroBytes(salt);
-        }
+        var salt = new byte[] { 0, 1, 2, 3 };
 
         var hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: password,
@@ -71,10 +82,85 @@ public class Database
         return hashedPassword;
     }
 
+    public int GetAuthorId(string name)
+    {
+        var sqlQuery = $"SELECT Id_author FROM Bookish.dbo.Author WHERE Name = '{name}'";
+        var authors =  db.Query<int>(sqlQuery, null, commandType: CommandType.Text).ToList();
+
+        if (authors.Count > 0)
+        {
+            return authors[0];
+        }
+
+        var insertQuery = $"INSERT INTO Bookish.dbo.Author (Name) VALUES ('{name}')";
+        db.Execute(insertQuery);
+        
+        sqlQuery = $"SELECT Id_author FROM Bookish.dbo.Author WHERE Name = '{name}'";
+        authors =  db.Query<int>(sqlQuery, null, commandType: CommandType.Text).ToList();
+        
+        return authors[0];
+    }
     public async Task<List<Borrow>> GetAllBorrows()
     {
         var sqlQuery = "SELECT * FROM Bookish.dbo.Borrow";
         var books = await db.QueryAsync<Borrow>(sqlQuery, null, commandType: CommandType.Text);
+
+        return books.ToList();
+    }
+
+    public async void InsertContribution(string ISBN, int id_author)
+    {
+        var sqlQuery =
+            $"INSERT INTO Bookish.dbo.Contributions (Id_book, Id_author) VALUES ('{ISBN}', '{id_author}')";
+        db.Execute(sqlQuery);
+    }
+
+    public bool VerifyUser(string email, string password)
+    {
+        var sqlQuery = $"SELECT Password FROM Bookish.dbo.Users WHERE Email = '{email}'";
+        var users = db.Query<User>(sqlQuery).ToList();
+        if (users.Count < 0)
+        {
+            return false;
+        }
+
+        return users[0].Password == Hash(password);
+    }
+
+    public bool BorrowBook(string ISBN, int id_user)
+    {
+        var availableCopiesQuery = $"SELECT Available_copies FROM Bookish.dbo.Book WHERE ISBN = '{ISBN}'";
+        var availableCopies = db.Query<int>(availableCopiesQuery).First();
+        if (availableCopies <= 0)
+        {
+            return false;
+        }
+        
+        InsertBorrow(ISBN, id_user);
+        availableCopies--;
+        var updateCopiesQuery = $"UPDATE Bookish.dbo.Book SET Available_copies = {availableCopies} WHERE ISBN = '{ISBN}'";
+        db.Execute(updateCopiesQuery);
+        return true;
+    }
+
+    public void ReturnBook(string ISBN, int id_user)
+    {
+        var deleteBorrowQuery = $"DELETE TOP (1) FROM Bookish.dbo.Borrow WHERE Id_book = '{ISBN}' AND Id_user = {id_user}";
+        db.Execute(deleteBorrowQuery);
+        
+        var availableCopiesQuery = $"SELECT Available_copies FROM Bookish.dbo.Book WHERE ISBN = '{ISBN}'";
+        var availableCopies = db.Query<int>(availableCopiesQuery).First();
+
+        availableCopies++;
+        var updateCopiesQuery = $"UPDATE Bookish.dbo.Book SET Available_copies = {availableCopies} WHERE ISBN = '{ISBN}'";
+        db.Execute(updateCopiesQuery);
+    }
+    
+    public async Task<List<Book>> GetBooksBorrowedByUser(int idUser)
+    {
+        var sqlQuery =
+            $"SELECT * FROM Bookish.dbo.Book INNER JOIN Bookish.dbo.Borrow ON Bookish.dbo.Book.ISBN = Bookish.dbo.Borrow.Id_book WHERE Bookish.dbo.Borrow.Id_user = {idUser}";
+        var books = await db.QueryAsync<Book>(sqlQuery, null, commandType: CommandType.Text);
 
         return books.ToList();
     }

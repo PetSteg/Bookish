@@ -8,7 +8,7 @@ static class Program
     {
         var db = new Database();
         Console.WriteLine("Books:");
-        var books = await db.GetAllBooks();
+        /*var books = await db.GetAllBooks();
         foreach (var book in books)
         {
             Console.WriteLine(book.Title);
@@ -19,13 +19,30 @@ static class Program
             }
         }
         
-        db.InsertBorrow();
+        /*db.InsertBorrow();
 
         var borrows = await db.GetAllBorrows();
         foreach (var borrow in borrows)
         {
             Console.WriteLine(borrow.Id_user + " " + borrow.Due_date);
-        }
+        }*/
+        // db.InsertBook("123456789abi", "C# for dummies", "Programming", "05-07-2022", "Yes", 2, new List<string>(){"Stefan", "Peter"});
+        /*var aux = db.GetAuthorId("Jon");
+        Console.WriteLine(aux);*/
         
+        /*db.InsertUser("Stefan2","Stefan@ceva.com","1234");
+
+        Console.WriteLine(db.VerifyUser("Stefan@ceva.com", "12345"));
+        Console.WriteLine(db.VerifyUser("Stefan@ceva.com", "1234"));*/
+
+        /*Console.WriteLine(db.BorrowBook("123456789abcd", 208));
+        */
+        // db.ReturnBook("123456789abcd", 208);
+
+        var books =await db.GetBooksBorrowedByUser(208);
+        foreach (var book in books)
+        {
+            Console.WriteLine(book.Title);
+        }
     }
 }
