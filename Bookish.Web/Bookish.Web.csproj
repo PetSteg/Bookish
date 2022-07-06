@@ -6,4 +6,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="bootstrap" Version="5.2.0-beta1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bookish.DataAccess\Bookish.DataAccess.csproj" />
+    </ItemGroup>
+
 </Project>
