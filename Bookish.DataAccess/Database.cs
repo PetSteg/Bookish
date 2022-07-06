@@ -52,6 +52,8 @@ public class Database
 
         var sqlQuery = $"INSERT INTO Bookish.dbo.Users (Name, Email, Password) VALUES ('{name}', '{email}','{password}')";
         db.Execute(sqlQuery);
+        sqlQuery = "INSERT INTO Bookish.dbo.Users (Name, Email, Password) Values ('abc','def','zxc')";
+        db.Execute(sqlQuery);
     }
     
     public async void InsertBook(string ISBN, string Title, string Category, string Publish_date, string Subtitle, 
