@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using Bookish.DataAccess;
+using Bookish.DataAccess.Models;
 using Bookish.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace simpleForm.Controllers;
+namespace Bookish.Web.Controllers;
 
 public class HomeController : Controller
 {
@@ -123,16 +124,32 @@ public class HomeController : Controller
         return View("Home", homeModel);
     }
 
-    public IActionResult Library()
+    private LibraryModel MakeLibraryAtPage(List<Book> books, int page)
     {
-        var library = new LibraryModel();
-        library.Books = new List<BookModel>();
+        var library = new LibraryModel { Books = new List<BookModel>() };
 
-        foreach (var book in db.GetAllBooks())
+        foreach (var book in books)
         {
             var authors = db.GetAuthorsOfBook(book.ISBN);
             library.Books.Add(new BookModel(book, authors));
         }
+
+        library.Page = page;
+
+        return library;
+    }
+
+    public IActionResult Library()
+    {
+        var library = MakeLibraryAtPage(db.GetAllBooks(), 1);
+
+        return View("Library", library);
+    }
+
+    [Route("Home/Library/{page}")]
+    public IActionResult Library([FromRoute] int page)
+    {
+        var library = MakeLibraryAtPage(db.GetAllBooks(), page);
 
         return View("Library", library);
     }
@@ -141,19 +158,21 @@ public class HomeController : Controller
     public IActionResult Search(string title)
     {
         var book = db.GetBookByTitle(title);
-        
+
         var library = new LibraryModel();
         library.Books = new List<BookModel>();
-        
+
         if (book != null)
         {
             var authors = db.GetAuthorsOfBook(book.ISBN);
             var bookModel = new BookModel(book, authors);
-            
+
             library.Books.Add(bookModel);
         }
+
         return View("Library", library);
     }
+
     public IActionResult Privacy()
     {
         return View();
