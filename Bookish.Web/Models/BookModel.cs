@@ -8,6 +8,7 @@ public class BookModel
     public string AuthorsString { get; set; }
     public List<Author> Authors { get; set; }
     public string DueDate { get; set; }
+    public bool? Error { get; set; }
 
     public BookModel()
     {

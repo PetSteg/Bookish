@@ -45,29 +45,39 @@ public class HomeController : Controller
     public IActionResult AddBook()
     {
         var userId = Request.Cookies["id"];
-
         if (userId == null)
         {
             Response.Redirect("/Home/Login");
         }
 
-        return View();
+        return View(new BookModel { Error = false });
+    }
+
+    private bool ValidateBook(Book book)
+    {
+        return book.ISBN != null && book.ISBN.Length == 13 && !string.IsNullOrEmpty(book.Title) &&
+               !string.IsNullOrEmpty(book.Category) && !string.IsNullOrEmpty(book.Publish_date) &&
+               !string.IsNullOrEmpty(book.Subtitle) && !string.IsNullOrEmpty(book.Cover_photo_url) &&
+               book.Available_copies > 0;
     }
 
     [HttpPost]
     public IActionResult AddBook(BookModel bookModel)
     {
         var userId = Request.Cookies["id"];
-
-        if (userId == null)
+        if (userId == null || !ValidateBook(bookModel.Book) || string.IsNullOrEmpty(bookModel.AuthorsString))
         {
-            return View();
+            return View(new BookModel { Error = true });
         }
 
         var authors = bookModel.AuthorsString.Split(',').ToList();
 
-        db.InsertBook(bookModel.Book, authors);
-        return View();
+        if (!db.InsertBook(bookModel.Book, authors))
+        {
+            return View(new BookModel { Error = true });
+        }
+
+        return Redirect("/Home/Library");
     }
 
     [HttpGet]
