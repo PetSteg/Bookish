@@ -26,6 +26,18 @@ public class BookQueries
         return books;
     }
 
+    public Book GetBookByTitle(string title)
+    {
+        var sqlQuery = $"SELECT * FROM Bookish.dbo.Book WHERE Title = '{title}'";
+        var book =  db.Query<Book>(sqlQuery, null, commandType: CommandType.Text)?.ToList();
+        
+        if (book != null && book.Count() > 0)
+        {
+            return book.First();
+        }
+
+        return null;
+    }
 
     public List<Author> GetAuthorsOfBook(string isbn)
     {

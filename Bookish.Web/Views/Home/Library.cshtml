@@ -1,3 +1,5 @@
+@using Bookish.DataAccess
+@using Bookish.DataAccess.Models
 @model Bookish.Web.Models.LibraryModel
 
 <!-- Page Content -->
@@ -12,8 +14,10 @@
             <div class="col-md-8">
                 <div class="search">
                     <i class="fa fa-search"></i>
-                    <input type="text" class="form-control" placeholder="Have a question? Ask Now">
-                    <button class="btn btn-primary">Search</button>
+                    <form action="Search" method="post">
+                        <input type="text" class="form-control" placeholder="Search for a book" name="title">
+                        <button class="btn btn-primary">Search</button>
+                    </form>
                 </div>
             </div>
         </div>

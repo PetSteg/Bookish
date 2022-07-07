@@ -137,6 +137,23 @@ public class HomeController : Controller
         return View("Library", library);
     }
 
+    [HttpPost]
+    public IActionResult Search(string title)
+    {
+        var book = db.GetBookByTitle(title);
+        
+        var library = new LibraryModel();
+        library.Books = new List<BookModel>();
+        
+        if (book != null)
+        {
+            var authors = db.GetAuthorsOfBook(book.ISBN);
+            var bookModel = new BookModel(book, authors);
+            
+            library.Books.Add(bookModel);
+        }
+        return View("Library", library);
+    }
     public IActionResult Privacy()
     {
         return View();

@@ -16,10 +16,14 @@
 
     <ItemGroup>
       <Content Remove="Views\Home\Form.cshtml" />
+      <Content Remove="Views\Home\Seached.cshtml" />
+      <Content Remove="Models\SearchModel.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="Views\Home\Form.cshtml.cs" />
+      <Compile Remove="Views\Home\Seached.cshtml.cs" />
+      <Compile Remove="Models\SearchModel.cshtml.cs" />
     </ItemGroup>
 
     <ItemGroup>
