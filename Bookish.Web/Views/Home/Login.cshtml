@@ -50,6 +50,11 @@
                                 <div class="d-grid">
                                     <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Sign in</button>
                                 </div>
+
+                                @if (Model.Error == true)
+                                {
+                                    <h7 class="my-4 text-center text-danger">Wrong credentials.</h7>
+                                }
                             </form>
                         </div>
                     </div>

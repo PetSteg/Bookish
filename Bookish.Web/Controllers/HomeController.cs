@@ -1,11 +1,7 @@
 ﻿using System.Diagnostics;
 using Bookish.DataAccess;
-using Bookish.DataAccess.Models;
 using Bookish.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Bookish.Web.Models;
-using Microsoft.Extensions.Logging;
 
 namespace simpleForm.Controllers;
 
@@ -27,14 +23,21 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Register()
     {
-        return View();
+        var registerModel = new RegisterModel();
+        registerModel.Error = false;
+        return View(registerModel);
     }
 
     [HttpPost]
     public IActionResult Register(string name, string email, string password)
     {
-        db.InsertUser(name, email, password);
-        return View();
+        if (db.InsertUser(name, email, password))
+        {
+            return Redirect("/Home/Login");
+        }
+
+        var registerModel = new RegisterModel { Error = true };
+        return View(registerModel);
     }
 
     [HttpGet]
@@ -69,7 +72,8 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Login()
     {
-        return View();
+        var loginModel = new LoginModel { Error = false };
+        return View(loginModel);
     }
 
     [HttpPost]
@@ -87,10 +91,12 @@ public class HomeController : Controller
                     Secure = false
                 }
             );
-            Response.Redirect("/Home/Home");
+            // Response.Redirect("/Home/Home");
+            return Redirect("/Home/Home");
         }
 
-        return View();
+        var loginModel = new LoginModel { Error = true };
+        return View(loginModel);
     }
 
     [HttpGet]

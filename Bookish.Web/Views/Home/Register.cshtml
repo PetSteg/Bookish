@@ -27,7 +27,6 @@
                     <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
                     <form asp-action="Register" method="post">
 
-
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" placeholder="name@example.com" asp-for="Name"/>
                             <label asp-for="Name">Name</label>
@@ -52,6 +51,10 @@
                         <a class="d-block text-center mt-2 small" href="/Home/Login">Have an account? Sign In</a>
 
                         <hr class="my-4">
+                        @if (Model.Error == true)
+                        {
+                            <h7 class="card-title text-center mb-5 fw-light fs-5 text-danger text-center">Account already exists.</h7>
+                        }
                     </form>
                 </div>
             </div>
