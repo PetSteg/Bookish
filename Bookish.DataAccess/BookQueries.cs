@@ -29,8 +29,8 @@ public class BookQueries
     public Book GetBookByTitle(string title)
     {
         var sqlQuery = $"SELECT * FROM Bookish.dbo.Book WHERE Title = '{title}'";
-        var book =  db.Query<Book>(sqlQuery, null, commandType: CommandType.Text)?.ToList();
-        
+        var book = db.Query<Book>(sqlQuery, null, commandType: CommandType.Text)?.ToList();
+
         if (book != null && book.Count() > 0)
         {
             return book.First();
@@ -89,12 +89,12 @@ public class BookQueries
         db.Execute(sqlQuery);
     }
 
-    public void InsertBook(string isbn, string title, string category, string publishDate, string subtitle,
+    public bool InsertBook(string isbn, string title, string category, string publishDate, string subtitle,
         string coverPhotoUrl, int availableCopies, List<string> authors)
     {
         if (GetBookByIsbn(isbn) != null || availableCopies <= 0)
         {
-            return;
+            return false;
         }
 
         var sqlQuery =
@@ -106,11 +106,13 @@ public class BookQueries
             var authorId = GetOrAttemptToInsertAuthorId(author);
             InsertContribution(isbn, (int)authorId!);
         }
+
+        return true;
     }
 
-    public void InsertBook(Book book, List<string> authors)
+    public bool InsertBook(Book book, List<string> authors)
     {
-        InsertBook(book.ISBN, book.Title, book.Category, book.Publish_date, book.Subtitle, book.Cover_photo_url,
+        return InsertBook(book.ISBN, book.Title, book.Category, book.Publish_date, book.Subtitle, book.Cover_photo_url,
             book.Available_copies, authors);
     }
 

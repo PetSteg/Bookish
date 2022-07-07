@@ -56,6 +56,12 @@
                         </div>
 
                         <hr class="my-4">
+
+                        @if (Model.Error == true)
+                        {
+                            <h7 class="my-4 text-center text-danger">Couldn't add book, try again.</h7>
+                            <hr class="my-4">
+                        }
                     </form>
                 </div>
             </div>
