@@ -71,4 +71,9 @@ public class Database
     {
         bookQueries.InsertBook(book, authors);
     }
+
+    public Book GetBookByTitle(string title)
+    {
+       return bookQueries.GetBookByTitle(title);
+    }
 }
