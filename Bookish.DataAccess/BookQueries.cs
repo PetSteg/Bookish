@@ -133,11 +133,12 @@ public class BookQueries
     private int GetAvailableCopies(string isbn)
     {
         var sqlQuery = $"SELECT Available_copies FROM Bookish.dbo.Book WHERE ISBN = '{isbn}'";
-        var availableCopies = db.Query<int>(sqlQuery)?.FirstOrDefault(null);
+        var availableCopies = db.Query<int>(sqlQuery)?.First();
+        
         return availableCopies ?? 0;
     }
 
-    private Book? GetBookByIsbn(string isbn)
+    private Book GetBookByIsbn(string isbn)
     {
         var sqlQuery = $"SELECT * FROM Bookish.dbo.Book WHERE ISBN = '{isbn}'";
         var book = db.Query<Book>(sqlQuery).FirstOrDefault(null as Book);

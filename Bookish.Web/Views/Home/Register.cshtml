@@ -13,6 +13,46 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Bookish.Web.styles.css" asp-append-version="true"/>
+    
+    <script>
+        function Validation() {
+            
+            
+            var name = document.getElementById("tf1").value;
+            var email = document.getElementById("tf2").value;
+            var password = document.getElementById("tf3").value;
+                        
+            
+            var regEmail=/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+            var regName = /\d+$/g;
+         
+            if (name == "" || regName.test(name)) {
+                window.alert("Please enter your name properly.");
+                name.focus();
+                return false;
+            }
+            
+            if (email == "" || !regEmail.test(email)) {
+                window.alert("Please enter a valid e-mail address.");
+                email.focus();
+                return false;
+            }
+            
+            if (password == "") {
+                alert("Please enter your password");
+                password.focus();
+                return false;
+            }
+             
+            if(password.length < 6) {
+                alert("Password should be atleast 6 character long");
+                password.focus();
+                return false;
+            }
+            
+        }
+    </script>
+    
 </head>
 
 <body>
@@ -25,23 +65,23 @@
                 </div>
                 <div class="card-body p-4 p-sm-5">
                     <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
-                    <form asp-action="Register" method="post">
+                    <form asp-action="Register" name="reg_form" onsubmit="return Validation()" method="post">
 
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Name"/>
+                            <input type="text" class="form-control" placeholder="name@example.com" id="tf1" name = "Name" asp-for="Name"/>
                             <label asp-for="Name">Name</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" placeholder="name@example.com" asp-for="Email"/>
+                            <input type="email" class="form-control" placeholder="name@example.com" id="tf2" name ="Email" asp-for="Email"/>
                             <label asp-for="Email">Email address</label>
                         </div>
 
                         <hr>
 
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" placeholder="Password" asp-for="Password"/>
+                            <input type="password" class="form-control" placeholder="Password" id="tf3" name = "Password" asp-for="Password"/>
                             <label asp-for="Password" class="">Password</label>
                         </div>
 

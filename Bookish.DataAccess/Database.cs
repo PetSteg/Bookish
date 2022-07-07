@@ -60,7 +60,7 @@ public class Database
     {
         bookQueries.BorrowBook(isbn, userId);
     }
-
+    
     public void InsertBook(string isbn, string title, string category, string publishDate, string subtitle,
         string coverPhotoUrl, int availableCopies, List<string> authors)
     {
@@ -72,6 +72,10 @@ public class Database
         bookQueries.InsertBook(book, authors);
     }
 
+    public void ReturnBook(string isbn, int userId)
+    {
+        bookQueries.ReturnBook(isbn, userId);
+    }
     public Book GetBookByTitle(string title)
     {
        return bookQueries.GetBookByTitle(title);

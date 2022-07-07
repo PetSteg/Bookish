@@ -31,10 +31,14 @@
         @foreach (var book in Model.Books)
         {
             <div class="col-md-2 col-sm-4 mb-4">
-                    <a href="#">
-                        <img class="img-fluid img300x200" src=@book.Book.Cover_photo_url alt="">
-                    </a>
+                <a href="#">
+                    <img class="img-fluid img300x200" src=@book.Book.Cover_photo_url alt="">
+                </a>
                 <p>@book.Book.Title</p>
+                <form action="ReturnBook" method="post">
+                    <input type="hidden" name="ISBN" value=@book.Book.ISBN>
+                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Return Book</button>
+                </form>
             </div>
         }
     </div>

@@ -63,7 +63,13 @@ public class HomeController : Controller
         var authors = bookModel.AuthorsString.Split(',').ToList();
 
         db.InsertBook(bookModel.Book, authors);
-        return View();
+        
+        var library = new LibraryModel();
+        library.Books = new List<BookModel>();
+        
+        library.Books.Add(bookModel);
+        
+        return View("Library", library);
     }
 
     [HttpGet]
@@ -166,7 +172,22 @@ public class HomeController : Controller
         Response.Redirect("/Home/Library");
         return new RedirectResult("/Home/Library");
     }
-
+    
+    [HttpPost]
+    public IActionResult ReturnBook(string ISBN)
+    {
+        var userId = Request.Cookies["id"];
+        if (userId == null)
+        {
+            Response.Redirect("/Home/Login");
+        }
+        
+        db.ReturnBook(ISBN, int.Parse(userId));
+        Response.Redirect("/Home/Home");
+        return new RedirectResult("/Home/Home");
+    }
+    
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
