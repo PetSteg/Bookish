@@ -130,8 +130,11 @@ public class HomeController : Controller
 
         foreach (var book in books)
         {
-            var authors = db.GetAuthorsOfBook(book.ISBN);
-            library.Books.Add(new BookModel(book, authors));
+            if (book != null)
+            {
+                var authors = db.GetAuthorsOfBook(book.ISBN);
+                library.Books.Add(new BookModel(book, authors));
+            }
         }
 
         library.Page = page;
@@ -157,20 +160,10 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Search(string title)
     {
-        var book = db.GetBookByTitle(title);
+        var books = new List<Book> { db.GetBookByTitle(title) };
+        var library = MakeLibraryAtPage(books, 1);
 
-        var library = new LibraryModel();
-        library.Books = new List<BookModel>();
-
-        if (book != null)
-        {
-            var authors = db.GetAuthorsOfBook(book.ISBN);
-            var bookModel = new BookModel(book, authors);
-
-            library.Books.Add(bookModel);
-        }
-
-        return View("Library", library);
+        return View("Search", library);
     }
 
     public IActionResult Privacy()
