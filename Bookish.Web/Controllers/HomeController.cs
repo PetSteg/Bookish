@@ -3,11 +3,8 @@ using Bookish.DataAccess;
 using Bookish.DataAccess.Models;
 using Bookish.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Bookish.Web.Models;
-using Microsoft.Extensions.Logging;
 
-namespace simpleForm.Controllers;
+namespace Bookish.Web.Controllers;
 
 public class HomeController : Controller
 {
@@ -27,14 +24,21 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Register()
     {
-        return View();
+        var registerModel = new RegisterModel();
+        registerModel.Error = false;
+        return View(registerModel);
     }
 
     [HttpPost]
     public IActionResult Register(string name, string email, string password)
     {
-        db.InsertUser(name, email, password);
-        return View();
+        if (db.InsertUser(name, email, password))
+        {
+            return Redirect("/Home/Login");
+        }
+
+        var registerModel = new RegisterModel { Error = true };
+        return View(registerModel);
     }
 
     [HttpGet]
@@ -75,7 +79,8 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Login()
     {
-        return View();
+        var loginModel = new LoginModel { Error = false };
+        return View(loginModel);
     }
 
     [HttpPost]
@@ -93,10 +98,12 @@ public class HomeController : Controller
                     Secure = false
                 }
             );
-            Response.Redirect("/Home/Home");
+            // Response.Redirect("/Home/Home");
+            return Redirect("/Home/Home");
         }
 
-        return View();
+        var loginModel = new LoginModel { Error = true };
+        return View(loginModel);
     }
 
     [HttpGet]
@@ -123,16 +130,35 @@ public class HomeController : Controller
         return View("Home", homeModel);
     }
 
+    private LibraryModel MakeLibraryAtPage(List<Book> books, int page)
+    {
+        var library = new LibraryModel { Books = new List<BookModel>() };
+
+        foreach (var book in books)
+        {
+            if (book != null)
+            {
+                var authors = db.GetAuthorsOfBook(book.ISBN);
+                library.Books.Add(new BookModel(book, authors));
+            }
+        }
+
+        library.Page = page;
+
+        return library;
+    }
+
     public IActionResult Library()
     {
-        var library = new LibraryModel();
-        library.Books = new List<BookModel>();
+        var library = MakeLibraryAtPage(db.GetAllBooks(), 1);
 
-        foreach (var book in db.GetAllBooks())
-        {
-            var authors = db.GetAuthorsOfBook(book.ISBN);
-            library.Books.Add(new BookModel(book, authors));
-        }
+        return View("Library", library);
+    }
+
+    [Route("Home/Library/{page}")]
+    public IActionResult Library([FromRoute] int page)
+    {
+        var library = MakeLibraryAtPage(db.GetAllBooks(), page);
 
         return View("Library", library);
     }
@@ -140,20 +166,12 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Search(string title)
     {
-        var book = db.GetBookByTitle(title);
-        
-        var library = new LibraryModel();
-        library.Books = new List<BookModel>();
-        
-        if (book != null)
-        {
-            var authors = db.GetAuthorsOfBook(book.ISBN);
-            var bookModel = new BookModel(book, authors);
-            
-            library.Books.Add(bookModel);
-        }
-        return View("Library", library);
+        var books = new List<Book> { db.GetBookByTitle(title) };
+        var library = MakeLibraryAtPage(books, 1);
+
+        return View("Search", library);
     }
+
     public IActionResult Privacy()
     {
         return View();
