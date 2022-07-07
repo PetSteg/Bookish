@@ -85,10 +85,22 @@ body {
     height: 500px;
 }
 
+.img500x333 {
+    object-fit: contain;
+    width: 333px;
+    height: 500px;
+}
+
 .img200 {
     object-fit: cover;
     width: 200px;
     height: 200px;
+}
+
+.img300x200 {
+    object-fit: contain;
+    width: 200px;
+    height: 300px;
 }
 .search{
     position: relative;
@@ -105,13 +117,10 @@ body {
 
 }
 
-
 .search input:focus{
 
     box-shadow: none;
     border: 2px solid blue;
-
-
 }
 
 .search .fa-search{

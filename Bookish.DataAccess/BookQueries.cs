@@ -47,7 +47,9 @@ public class BookQueries
     private int? GetAuthorId(string name)
     {
         var sqlQuery = $"SELECT Id_author FROM Bookish.dbo.Author WHERE Name = '{name}'";
-        return db.Query<int>(sqlQuery, null, commandType: CommandType.Text)?.First();
+        var authorId = db.Query<int?>(sqlQuery, null, commandType: CommandType.Text).FirstOrDefault(null as int?);
+
+        return authorId;
     }
 
     private bool InsertAuthor(string name)
@@ -76,11 +78,15 @@ public class BookQueries
     }
 
     public void InsertBook(string isbn, string title, string category, string publishDate, string subtitle,
-        int availableCopies, List<string> authors)
+        string coverPhotoUrl, int availableCopies, List<string> authors)
     {
+        if (GetBookByIsbn(isbn) != null || availableCopies <= 0)
+        {
+            return;
+        }
+
         var sqlQuery =
-            $"INSERT INTO Bookish.dbo.Book (ISBN, Title, Category, Publish_date, Subtitle, Available_copies) VALUES ('{isbn}', '{title}', " +
-            $"'{category}','{publishDate}', '{subtitle}','{availableCopies}')";
+            $"INSERT INTO Bookish.dbo.Book (ISBN, Title, Category, Publish_date, Subtitle, Cover_photo_url, Available_copies) VALUES ('{isbn}', '{title}', '{category}','{publishDate}', '{subtitle}', '{coverPhotoUrl}', {availableCopies})";
         db.Execute(sqlQuery);
 
         foreach (var author in authors)
@@ -88,6 +94,12 @@ public class BookQueries
             var authorId = GetOrAttemptToInsertAuthorId(author);
             InsertContribution(isbn, (int)authorId!);
         }
+    }
+
+    public void InsertBook(Book book, List<string> authors)
+    {
+        InsertBook(book.ISBN, book.Title, book.Category, book.Publish_date, book.Subtitle, book.Cover_photo_url,
+            book.Available_copies, authors);
     }
 
     public void InsertBorrow(string isbn, int userId)
@@ -109,8 +121,16 @@ public class BookQueries
     private int GetAvailableCopies(string isbn)
     {
         var sqlQuery = $"SELECT Available_copies FROM Bookish.dbo.Book WHERE ISBN = '{isbn}'";
-        var availableCopies = db.Query<int>(sqlQuery)?.First();
+        var availableCopies = db.Query<int>(sqlQuery)?.FirstOrDefault(null);
         return availableCopies ?? 0;
+    }
+
+    private Book? GetBookByIsbn(string isbn)
+    {
+        var sqlQuery = $"SELECT * FROM Bookish.dbo.Book WHERE ISBN = '{isbn}'";
+        var book = db.Query<Book>(sqlQuery).FirstOrDefault(null as Book);
+
+        return book;
     }
 
     private bool UpdateAvailableCopies(string isbn, int availableCopies)

@@ -1,0 +1,64 @@
+@model Bookish.Web.Models.BookModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-xl-9 mx-auto">
+            <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
+                <div class="card-img-left d-none d-md-flex">
+                    <!-- Background image for card set in CSS! -->
+                </div>
+                <div class="card-body p-4 p-sm-5">
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">Add Book</h5>
+                    <form asp-action="AddBook" method="post">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.ISBN"/>
+                            <label asp-for="Book.ISBN">ISBN</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Title"/>
+                            <label asp-for="Book.Title">Title</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Category"/>
+                            <label asp-for="Book.Category">Category</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="AuthorsString"/>
+                            <label asp-for="AuthorsString">Authors</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Publish_date"/>
+                            <label asp-for="Book.Publish_date">Publish_date</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Subtitle"/>
+                            <label asp-for="Book.Subtitle">Subtitle</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Cover_photo_url"/>
+                            <label asp-for="Book.Cover_photo_url">Cover_photo_url</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="name@example.com" asp-for="Book.Available_copies"/>
+                            <label asp-for="Book.Available_copies">Available_copies</label>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Add Book</button>
+                        </div>
+
+                        <hr class="my-4">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

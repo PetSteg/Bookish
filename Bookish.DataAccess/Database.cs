@@ -60,4 +60,15 @@ public class Database
     {
         bookQueries.BorrowBook(isbn, userId);
     }
+
+    public void InsertBook(string isbn, string title, string category, string publishDate, string subtitle,
+        string coverPhotoUrl, int availableCopies, List<string> authors)
+    {
+        bookQueries.InsertBook(isbn, title, category, publishDate, subtitle, coverPhotoUrl, availableCopies, authors);
+    }
+
+    public void InsertBook(Book book, List<string> authors)
+    {
+        bookQueries.InsertBook(book, authors);
+    }
 }

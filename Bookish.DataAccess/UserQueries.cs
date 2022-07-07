@@ -41,7 +41,7 @@ public class UserQueries
     public bool VerifyUser(string email, string password)
     {
         var sqlQuery = $"SELECT Password FROM Bookish.dbo.Users WHERE Email = '{email}'";
-        var user = db.Query<User>(sqlQuery)?.First();
+        var user = db.Query<User>(sqlQuery).FirstOrDefault(null as User);
 
         if (user == null)
         {
@@ -62,8 +62,8 @@ public class UserQueries
     public User? GetUserById(string id)
     {
         var sqlQuery = $"SELECT * FROM Bookish.dbo.Users WHERE Id_user = '{id}'";
-        var user = db.Query<User>(sqlQuery, null, commandType: CommandType.Text);
+        var user = db.Query<User>(sqlQuery, null, commandType: CommandType.Text).FirstOrDefault(null as User);
 
-        return user?.First();
+        return user;
     }
 }

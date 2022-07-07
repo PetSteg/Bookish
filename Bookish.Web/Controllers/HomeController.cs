@@ -38,6 +38,35 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    public IActionResult AddBook()
+    {
+        var userId = Request.Cookies["id"];
+
+        if (userId == null)
+        {
+            Response.Redirect("/Home/Login");
+        }
+
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult AddBook(BookModel bookModel)
+    {
+        var userId = Request.Cookies["id"];
+
+        if (userId == null)
+        {
+            return View();
+        }
+
+        var authors = bookModel.AuthorsString.Split(',').ToList();
+
+        db.InsertBook(bookModel.Book, authors);
+        return View();
+    }
+
+    [HttpGet]
     public IActionResult Login()
     {
         return View();
@@ -46,12 +75,6 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Login(string email, string password)
     {
-        Console.WriteLine("User has cookies:");
-        foreach (var cookie in Request.Cookies)
-        {
-            Console.WriteLine(cookie.Key + ":" + cookie.Value);
-        }
-
         if (db.VerifyUser(email, password))
         {
             Response.Cookies.Append(
@@ -77,12 +100,6 @@ public class HomeController : Controller
         if (userId == null)
         {
             Response.Redirect("/Home/Login");
-        }
-
-        Console.WriteLine("User has cookies:");
-        foreach (var cookie in Request.Cookies)
-        {
-            Console.WriteLine(cookie.Key + ":" + cookie.Value);
         }
 
         var user = db.GetUserById(userId);
@@ -118,15 +135,19 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+
     [HttpPost]
     public IActionResult Borrowed(string ISBN)
     {
-        
         var userId = Request.Cookies["id"];
-        db.BorrowBook(ISBN, Int32.Parse(userId));
+        if (userId == null)
+        {
+            Response.Redirect("/Home/Login");
+        }
+
+        db.BorrowBook(ISBN, int.Parse(userId));
         Response.Redirect("/Home/Library");
-        return View("Borrowed");
+        return new RedirectResult("/Home/Library");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
