@@ -1,3 +1,8 @@
 .idea
-Bookish/bin
-Bookish/obj
+Bookish.ConsoleApp/bin
+Bookish.ConsoleApp/obj
+Bookish.DataAccess/bin
+Bookish.DataAccess/obj
+Bookish.Web/bin
+Bookish.Web/obj
+*.json

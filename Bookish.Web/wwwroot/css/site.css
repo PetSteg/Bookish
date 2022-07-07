@@ -1,0 +1,146 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background: linear-gradient(to left, white, powderblue);
+}
+
+.card-img-left {
+    width: 45%;
+    /* Link to your background image using in the property below! */
+    background: scroll center url('https://source.unsplash.com/WEQbe2jBg40/414x512');
+    background-size: cover;
+}
+
+.btn-login {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+}
+
+.btn-google {
+    color: white !important;
+    background-color: #ea4335;
+}
+
+.btn-facebook {
+    color: white !important;
+    background-color: #3b5998;
+}
+
+.login {
+    min-height: 100vh;
+}
+
+.bg-image {
+    background-image: url('https://source.unsplash.com/WEQbe2jBg40/600x1200');
+    background-size: cover;
+    background-position: center;
+}
+
+.login-heading {
+    font-weight: 300;
+}
+
+.btn-login {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+}
+
+.footer {
+    background-color: white;
+    box-shadow: 0 20vh 0 20vh white;
+}
+
+.img-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+
+.img-holder img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%
+}
+
+.img500 {
+    object-fit: contain;
+    width: 500px;
+    height: 500px;
+}
+
+.img500x333 {
+    object-fit: contain;
+    width: 333px;
+    height: 500px;
+}
+
+.img200 {
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
+}
+
+.img300x200 {
+    object-fit: contain;
+    width: 200px;
+    height: 300px;
+}
+.search{
+    position: relative;
+    box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+
+}
+
+.search input{
+
+    height: 60px;
+    text-indent: 25px;
+    border: 2px solid #d6d4d4;
+
+
+}
+
+.search input:focus{
+
+    box-shadow: none;
+    border: 2px solid blue;
+}
+
+.search .fa-search{
+
+    position: absolute;
+    top: 20px;
+    left: 16px;
+
+}
+
+.search button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 50px;
+    width: 110px;
+    background: blue;
+}
+
+.searchbar {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
